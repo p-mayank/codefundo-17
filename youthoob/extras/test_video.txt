@@ -1,0 +1,52 @@
+VIDEO_URL = "https://www.youtube.com/watch?v=WmvpSTVu9N4"
+VIDEO_ID = "WmvpSTVu9N4"
+
+##LIST API RESPONSE
+
+/**
+ * API response
+ */
+{
+  "kind": "youtube#captionListResponse",
+  "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/eRoklNpLTmxEfgkMQwK18k63GO0\"",
+  "items": [
+    {
+      "kind": "youtube#caption",
+      "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/WD8FfQw9juFGhNK8di8cLwtPEWQ\"",
+      "id": "NvoV_NNqoCDFshAB1B2tRh81-Ticm-WNv-JaMeWpABE=",
+      "snippet": {
+        "videoId": "WmvpSTVu9N4",
+        "lastUpdated": "2017-09-28T17:35:35.289Z",
+        "trackKind": "ASR",
+        "language": "en",
+        "name": "",
+        "audioTrackType": "unknown",
+        "isCC": false,
+        "isLarge": false,
+        "isEasyReader": false,
+        "isDraft": false,
+        "isAutoSynced": false,
+        "status": "serving"
+      }
+    },
+    {
+      "kind": "youtube#caption",
+      "etag": "\"cbz3lIQ2N25AfwNr-BdxUVxJ_QY/GWBxWf19nw9ZwHSQ3C-wneBPkKE\"",
+      "id": "Nv9tPRrpVe6RjtKCAXvbuDwkkPHAdhLE",
+      "snippet": {
+        "videoId": "WmvpSTVu9N4",
+        "lastUpdated": "2017-09-29T15:51:55.733Z",
+        "trackKind": "standard",
+        "language": "en",
+        "name": "",
+        "audioTrackType": "unknown",
+        "isCC": false,
+        "isLarge": false,
+        "isEasyReader": false,
+        "isDraft": false,
+        "isAutoSynced": false,
+        "status": "serving"
+      }
+    }
+  ]
+}
