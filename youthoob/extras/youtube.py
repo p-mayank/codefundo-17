@@ -79,6 +79,9 @@ def list_captions(youtube, video_id):
     name = item["snippet"]["name"]
     language = item["snippet"]["language"]
     print("Caption track '%s(%s)' in '%s' language." % (name, id, language))
+    #To extract ID
+    if(language=='en' and item["snippet"]["trackKind"]=='standard'):
+        print(id)
 
   return results["items"]
 
@@ -133,7 +136,7 @@ def download_caption(youtube, caption_id, tfmt):
     tfmt=tfmt
   ).execute()
 
-  print("First line of caption track: %s" % (subtitle))
+  print("%s" % (subtitle))
 
 # Call the API's captions.delete method to delete an existing caption track.
 def delete_caption(youtube, caption_id):

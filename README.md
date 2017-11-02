@@ -16,3 +16,6 @@ Youthoob resources
 
 ##INSTALL THESE PACKAGES
 ###  sudo -H pip3 install --upgrade google-api-python-client
+
+### SERVER PASSWORDL: passwordCfd@17
+### USER: cfd
