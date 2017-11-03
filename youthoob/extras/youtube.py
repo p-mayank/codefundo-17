@@ -6,6 +6,7 @@
 import httplib2
 import os
 import sys
+import re
 
 from apiclient.discovery import build_from_document
 from apiclient.errors import HttpError
@@ -55,6 +56,7 @@ def get_authenticated_service(args):
     message=MISSING_CLIENT_SECRETS_MESSAGE)
 
   storage = Storage("%s-oauth2.json" % sys.argv[0])
+  credentials = storage.get()
 
   if credentials is None or credentials.invalid:
     credentials = run_flow(flow, storage, args)
@@ -134,8 +136,7 @@ def download_caption(youtube, caption_id, tfmt):
     id=caption_id,
     tfmt=tfmt
   ).execute()
-
-  #print("%s" % (subtitle))
+  print("%s" % (subtitle))
 
 # Call the API's captions.delete method to delete an existing caption track.
 def delete_caption(youtube, caption_id):
@@ -189,7 +190,7 @@ if __name__ == "__main__":
     elif args.action == 'update':
       update_caption(youtube, args.captionid, args.file);
     elif args.action == 'download':
-      download_caption(youtube, args.captionid, 'srt')
+      download_caption(youtube, args.captionid, 'sbv')
     elif args.action == 'delete':
       delete_caption(youtube, args.captionid);
     else:
@@ -200,7 +201,7 @@ if __name__ == "__main__":
       if captions:
         first_caption_id = captions[0]['id'];
         update_caption(youtube, first_caption_id, None);
-        download_caption(youtube, first_caption_id, 'srt')
+        download_caption(youtube, first_caption_id, 'sbv')
         delete_caption(youtube, first_caption_id);
   except HttpError as e:
     print("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))

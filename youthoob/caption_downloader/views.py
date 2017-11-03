@@ -94,7 +94,20 @@ def build_file(token_id):
   with open('youtube-v3-api-captions.json', 'w') as f:
     f.write(to_write)
 
-
+def parse_subtitle(subtitle):
+  n = [(m.start(0), m.end(0)) for m in re.finditer('"', subtitle)]
+  subtitle = subtitle[n[0][1]:]
+  x = subtitle.split('\\n')
+  x = filter(None, x)
+  out=[]
+  for a in x:
+      if(a[0]!='0'):
+          out.append(a)
+  #print(out)
+  out = ' '.join(out)
+  n = [(m.start(0), m.end(0)) for m in re.finditer('"', out)]
+  out = out[:n[0][0]]
+  return out
 
 ####################################-----VIEWS----##############################################################
 
@@ -113,11 +126,14 @@ def indexer(request):
     
     if(youtube is False):
       return JsonResponse({'token':'False'})
-    
-    caption_id = list_captions(youtube, video_id)
-    subtitle = download_caption(youtube, caption_id, 'srt')
-    json_in = {'token':'True', 'subtitle':subtitle}
-    return JsonResponse(json_in)
+    try:
+      caption_id = list_captions(youtube, video_id)
+      subtitle = download_caption(youtube, caption_id, 'srt')
+      subtitle_parsed = parse_subtitle(str(subtitle))
+      json_in = {'token':'True', 'subtitle':subtitle_parsed}
+      return JsonResponse(json_in)
+    except:
+      return JsonResponse({'token':'False'})
 
 ####Exempt CSRF
 @csrf_exempt
