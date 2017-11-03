@@ -22,12 +22,17 @@
         'scope': SCOPE
     }).then(function () {
       GoogleAuth = gapi.auth2.getAuthInstance();
-      console.log(GoogleAuth);
       // Listen for sign-in state changes.
       GoogleAuth.isSignedIn.listen(updateSigninStatus);
 
       // Handle initial sign-in state. (Determine if user is already signed in.)
       var user = GoogleAuth.currentUser.get();
+      var a_t = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token;
+      
+      if(a_t){
+        retrieve_token(a_t);
+      }
+
       setSigninStatus();
 
       // Call handleAuthClick function when user clicks on
@@ -48,7 +53,6 @@
     } else {
       // User is not signed in. Start Google auth flow.
       GoogleAuth.signIn();
-      retrieve_token(GoogleAuth);
     }
   }
 
@@ -78,21 +82,54 @@
 
   ///////////////////////////////////////////DJANGO EXTRACTION/////////////////////////////////////////
 
-  function retrieve_token(GoogleAuth){
-    var token_id = goyal(GoogleAuth); ///Goyal's extraction part
+  function retrieve_token(token){
+    var token_id = token; ///Goyal's extraction part
     $.ajax({
         type:'POST',
-        url:'',
+        url:'auth',
         data: {
           'access_token':token_id
         },
         success: function(data){
           if(data['token']=='True'){
-            //Redirect Here Token Received
+            grab_url();
           }
         }
       });
+  }
+
+  function grab_url(){
+    url = $('#input_field').val();
+    $.ajax({
+      type:'POST',
+      url:'indexer',
+      data:{
+        'url':url
+      },
+      success: function(data){
+        if(data['token']=='False'){
+          $('#sign-in-or-out-button').trigger('click');
+        }else{
+          summary(data['subtitle']);
+        }
+      }
+    });
   } 
+
+  function summary(subtitle){
+
+    $.ajax({
+      type:'POST',
+      url:'http://api.smmry.com/&SM_API_KEY=7A401654BB&SM_LENGTH=1&SM_WITH_BREAK',
+      data:{
+        'sm_api_input':subtitle
+      },
+      success: function(data){
+        console.log(data['sm_api_content']);
+      }
+    });
+
+  }
 
 </script>
 
