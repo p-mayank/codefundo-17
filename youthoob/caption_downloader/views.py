@@ -72,13 +72,13 @@ def list_captions(youtube, video_id):
     videoId=video_id
   ).execute()
 
-for item in results["items"]:
-  id = item["id"]
-  name = item["snippet"]["name"]
-  language = item["snippet"]["language"]
-  print("Caption track '%s(%s)' in '%s' language." % (name, id, language))
-  #To extract ID
-  if(language=='en' and item["snippet"]["trackKind"]=='standard'):
+  for item in results["items"]:
+    id = item["id"]
+    name = item["snippet"]["name"]
+    language = item["snippet"]["language"]
+    print("Caption track '%s(%s)' in '%s' language." % (name, id, language))
+    #To extract ID
+    if(language=='en' and item["snippet"]["trackKind"]=='standard'):
       return(id)
 
 def download_caption(youtube, caption_id, tfmt):
@@ -112,7 +112,7 @@ def parse_subtitle(subtitle):
 ####################################-----VIEWS----##############################################################
 
 def home(request):
-  return render(request, 'caption_downloader/index.html')
+  return render(request, 'caption_downloader/client_side.html')
 
 ####Exempt CSRF
 @csrf_exempt
@@ -140,5 +140,6 @@ def indexer(request):
 def build_token(request):
   if request.method == 'POST':
     token_id = request.POST['access_token']
+    print(token_id)
     build_file(token_id)
     return JsonResponse({'token':'True'})
