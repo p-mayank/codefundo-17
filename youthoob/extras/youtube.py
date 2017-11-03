@@ -55,7 +55,6 @@ def get_authenticated_service(args):
     message=MISSING_CLIENT_SECRETS_MESSAGE)
 
   storage = Storage("%s-oauth2.json" % sys.argv[0])
-  credentials = storage.get()
 
   if credentials is None or credentials.invalid:
     credentials = run_flow(flow, storage, args)
@@ -136,7 +135,7 @@ def download_caption(youtube, caption_id, tfmt):
     tfmt=tfmt
   ).execute()
 
-  print("%s" % (subtitle))
+  #print("%s" % (subtitle))
 
 # Call the API's captions.delete method to delete an existing caption track.
 def delete_caption(youtube, caption_id):
@@ -181,6 +180,7 @@ if __name__ == "__main__":
       exit("Please specify a valid file using the --file= parameter.")
 
   youtube = get_authenticated_service(args)
+  print(type(youtube))
   try:
     if args.action == 'upload':
       upload_caption(youtube, args.videoid, args.language, args.name, args.file)
