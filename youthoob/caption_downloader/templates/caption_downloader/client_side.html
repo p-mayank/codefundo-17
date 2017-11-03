@@ -1,3 +1,11 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html lang="en">
+<html>
+<head>
+</head>
+<body>
 <script>
   var GoogleAuth;
   var SCOPE = 'https://www.googleapis.com/auth/youtube.force-ssl';
@@ -28,7 +36,7 @@
       // Handle initial sign-in state. (Determine if user is already signed in.)
       var user = GoogleAuth.currentUser.get();
       var a_t = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token;
-      
+
       if(a_t){
         retrieve_token(a_t);
       }
@@ -39,10 +47,10 @@
       //      "Sign In/Authorize" button.
       $('#sign-in-or-out-button').click(function() {
         handleAuthClick();
-      }); 
+      });
       $('#revoke-access-button').click(function() {
         revokeAccess();
-      }); 
+      });
     });
   }
 
@@ -83,7 +91,8 @@
   ///////////////////////////////////////////DJANGO EXTRACTION/////////////////////////////////////////
 
   function retrieve_token(token){
-    var token_id = token; ///Goyal's extraction part
+    var token_id = token;
+    console.log(token_id); ///Goyal's extraction part
     $.ajax({
         type:'POST',
         url:'{% url "auth" %}',
@@ -92,7 +101,7 @@
         },
         success: function(data){
           if(data['token']=='True'){
-            grab_url();
+            // grab_url();
           }
         }
       });
@@ -102,30 +111,38 @@
     url = $('#input_field').val();
     $.ajax({
       type:'POST',
-      url:'indexer',
+      url:'{% url "indexer" %}',
       data:{
-        'url':'{% url "indexer" %}'
+        'url':url
       },
       success: function(data){
         if(data['token']=='False'){
-          $('#sign-in-or-out-button').trigger('click');
+          console.log("fal");
+          console.log(data["subtitle"]);
+          // $('#sign-in-or-out-button').trigger('click');
         }else{
+          console.log("tru");
+          console.log(data["subtitle"]);
           summary(data['subtitle']);
         }
       }
     });
-  } 
+  }
 
   function summary(subtitle){
 
     $.ajax({
       type:'POST',
-      url:'http://api.smmry.com/&SM_API_KEY=7A401654BB&SM_LENGTH=1&SM_WITH_BREAK',
+      url:'http://api.smmry.com/&SM_API_KEY=7A401654BB&SM_LENGTH=7&SM_WITH_BREAK',
       data:{
         'sm_api_input':subtitle
       },
       success: function(data){
+        console.log('here');
         console.log(data['sm_api_content']);
+      },error: function(XMLHttpRequest, textStatus){
+        console.log(textStatus);
+        console.log('there!');
       }
     });
 
@@ -139,12 +156,14 @@
         style="display: none; margin-left: 25px">Revoke access</button>
 
 <input type="text" name="url" id="input_field">
-<button type="button" onclick="grab_url();">URL</button>
+<button type="button" onclick="grab_url();" id="url_ext">URL</button>
 
 <div id="auth-status" style="display: inline; padding-left: 25px"></div><hr>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script async defer src="https://apis.google.com/js/api.js" 
-        onload="this.onload=function(){};handleClientLoad()" 
+<script async defer src="https://apis.google.com/js/api.js"
+        onload="this.onload=function(){};handleClientLoad()"
         onreadystatechange="if (this.readyState === 'complete') this.onload()">
 </script>
+</body>
+</html>

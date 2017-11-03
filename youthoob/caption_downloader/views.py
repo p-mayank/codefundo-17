@@ -17,6 +17,7 @@ import os
 import sys
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
+import pycurl
 
 
 ####################################-----API DEPENDENCIES----##############################################################
@@ -90,9 +91,17 @@ def download_caption(youtube, caption_id, tfmt):
 
 def build_file(token_id):
   time_curr = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
+  null = None
+  false = False
+  print(token_id)
   to_write = {"_module": "oauth2client.client", "user_agent": null, "token_expiry": "time_curr", "_class": "OAuth2Credentials", "refresh_token": null, "token_response": {"access_token": token_id, "token_type": "Bearer", "expires_in": 3600}, "revoke_uri": "https://accounts.google.com/o/oauth2/revoke", "id_token_jwt": null, "token_info_uri": "https://www.googleapis.com/oauth2/v3/tokeninfo", "access_token": token_id, "id_token": null, "scopes": ["https://www.googleapis.com/auth/youtube.force-ssl"], "client_secret": "NTy966jpbkL5MwAz4e5v78RK", "token_uri": "https://accounts.google.com/o/oauth2/token", "client_id": "518513510656-6c1kjfcctiqpj65nab1ba4mr5mjhj1jg.apps.googleusercontent.com", "invalid": false}
-  with open('youtube-v3-api-captions.json', 'w') as f:
-    f.write(to_write)
+  #ext = json.loads(to_write)
+  # captions_json_storage_link = 'cfd/youtube-v3-api-captions.json'
+
+  with open('manage.py-oauth2.json', 'w') as f:
+    # print("YO")
+    json.dump(to_write, f)
+    # print("yes")
 
 def parse_subtitle(subtitle):
   n = [(m.start(0), m.end(0)) for m in re.finditer('"', subtitle)]
@@ -107,8 +116,39 @@ def parse_subtitle(subtitle):
   out = ' '.join(out)
   n = [(m.start(0), m.end(0)) for m in re.finditer('"', out)]
   out = out[:n[0][0]]
+  summary(out)
   return out
 
+####################################-----SUMMARY------#################################################
+summary_api_url = "http://api.smmry.com/"
+
+def summary(text):
+    summary_key = "7A401654BB"
+    # json_in = {"SM_API_KEY": summary_key, "SM_LENGTH": 7, "sm_api_input": text}
+    # r = requests.post(summary_api_url, json=json_in)
+    # r_json = r.json()
+    # print(r_json["sm_api_content"])
+    # long_article = "Long article text goes here";
+    #
+    # $ch = curl_init("http://api.smmry.com/&SM_API_KEY=XXXXXXXXX&SM_LENGTH=14&SM_WITH_BREAK");
+    # curl_setopt($ch, CURLOPT_HTTPHEADER, array("Expect:")); // Important do not remove
+    # curl_setopt($ch, CURLOPT_POST, true);
+    # curl_setopt($ch, CURLOPT_POSTFIELDS, "sm_api_input=".$long_article);
+    # curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    # curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    # curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
+    # curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+    # $return = json_decode(curl_exec($ch), true);
+    # curl_close($ch);
+
+    # c = pycurl.Curl()
+    # c.setopt(c.URL, summary_api_url)
+    # c.setopt(c.HTTPHEADER, ["Expect:"])
+    # c.setopt(c.POST, 1)
+    # c.setopt(c.POSTFIELDS, "sm_api_input="+text)
+    # c.perform()
+    # print(c)
+    print(r.status_code, r.reason)
 ####################################-----VIEWS----##############################################################
 
 def home(request):
@@ -120,15 +160,22 @@ def indexer(request):
   if request.method == 'POST':
     video_url = request.POST["url"]
     pos = [(m.start(0), m.end(0)) for m in re.finditer('v=', video_url)]
+
+    # logger = logging.getLogger(__name__)
+    # logger.error(os.getcwd())
+    print(video_url)
+    print(pos)
     video_id = video_url[pos[0][1]:]
+
     args = Namespace(auth_host_name='localhost', auth_host_port=[8080, 8090], noauth_local_webserver=False, logging_level='ERROR')
+    print("args")
     youtube = get_authenticated_service(args)
-    
+    print(youtube)
     if(youtube is False):
       return JsonResponse({'token':'False'})
     try:
       caption_id = list_captions(youtube, video_id)
-      subtitle = download_caption(youtube, caption_id, 'srt')
+      subtitle = download_caption(youtube, caption_id, 'sbv')
       subtitle_parsed = parse_subtitle(str(subtitle))
       json_in = {'token':'True', 'subtitle':subtitle_parsed}
       return JsonResponse(json_in)
