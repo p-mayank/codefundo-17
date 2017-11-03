@@ -31,6 +31,11 @@ from oauth2client.file import Storage
 from oauth2client.tools import argparser, run_flow
 from argparse import Namespace
 
+############WATSON################
+from watson_developer_cloud import NaturalLanguageUnderstandingV1
+import watson_developer_cloud.natural_language_understanding.features.v1 \
+  as Features
+
 # YOUTUBE API
 CLIENT_SECRETS_FILE = "client_secrets.json"
 YOUTUBE_READ_WRITE_SSL_SCOPE = "https://www.googleapis.com/auth/youtube.force-ssl"
@@ -52,6 +57,43 @@ https://developers.google.com/api-client-library/python/guide/aaa_client_secrets
 
 
 ####################################-----HELPER FUNCTIONS----##############################################################
+
+def get_keywords(text):
+  natural_language_understanding = NaturalLanguageUnderstandingV1(
+  username="4f715217-9f93-4257-b977-c732bbfeecb3",
+  password="Fgy3OcTQqmxo",
+  version="2017-02-27")
+
+  response = natural_language_understanding.analyze(
+    text=text,
+    features=[
+      Features.Entities(
+        emotion=True,
+        sentiment=True,
+        limit=10
+      ),
+      Features.Keywords(
+        emotion=True,
+        sentiment=True,
+        limit=10
+      )
+    ]
+  )
+
+  # print(json.dumps(response, indent=2))
+
+  to_ret={}
+
+  for a in response["keywords"]:
+    to_ret.update({a['text'] : '#'})
+
+  for a in response["entities"]:
+    try:
+      to_ret.update({a['text']: a['disambiguation']['dbpedia_resource']})
+    except:
+      to_ret.update({a['text']: '#'})
+
+  return to_ret
 
 
 def get_authenticated_service(args):
@@ -128,38 +170,39 @@ def summary(text):
     r = requests.post(summary_api_url, data=json_in)
     r_json = r.json()
     print(r_json['sm_api_content'])
-    # # long_article = "Long article text goes here";
-    # #
-    # # $ch = curl_init("http://api.smmry.com/&SM_API_KEY=XXXXXXXXX&SM_LENGTH=14&SM_WITH_BREAK");
-    # # curl_setopt($ch, CURLOPT_HTTPHEADER, array("Expect:")); // Important do not remove
-    # # curl_setopt($ch, CURLOPT_POST, true);
-    # # curl_setopt($ch, CURLOPT_POSTFIELDS, "sm_api_input=".$long_article);
-    # # curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    # # curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    # # curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
-    # # curl_setopt($ch, CURLOPT_TIMEOUT, 20);
-    # # $return = json_decode(curl_exec($ch), true);
-    # # curl_close($ch);
-    #
-    # c = pycurl.Curl()
-    # c.setopt(c.URL, summary_api_url)
-    # c.setopt(c.HTTPHEADER, ["Expect:"])
-    # c.setopt(c.POST, 1)
-    #
-    # post_data = {'sm_api_input':text}
-    # print("l")
-    # postfields = urlencode(post_data)
-    #
-    # c.setopt(c.POSTFIELDS, postfields)
-    # c.setopt(c.FOLLOWLOCATION, 1)
-    # c.setopt(c.RETURNTRANSFER, 1);
-    # c.setopt(c.CONNECTTIMEOUT, 20);
-    # c.setopt(c.TIMEOUT, 20);
-    #
-    # c.perform()
-    # print(c)
+    '''
+    long_article = "Long article text goes here";
+    
+    $ch = curl_init("http://api.smmry.com/&SM_API_KEY=XXXXXXXXX&SM_LENGTH=14&SM_WITH_BREAK");
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Expect:")); // Important do not remove
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, "sm_api_input=".$long_article);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+    $return = json_decode(curl_exec($ch), true);
+    curl_close($ch);
+    
+    c = pycurl.Curl()
+    c.setopt(c.URL, summary_api_url)
+    c.setopt(c.HTTPHEADER, ["Expect:"])
+    c.setopt(c.POST, 1)
+    
+    post_data = {'sm_api_input':text}
+    print("l")
+    postfields = urlencode(post_data)
+    
+    c.setopt(c.POSTFIELDS, postfields)
+    c.setopt(c.FOLLOWLOCATION, 1)
+    c.setopt(c.RETURNTRANSFER, 1);
+    c.setopt(c.CONNECTTIMEOUT, 20);
+    c.setopt(c.TIMEOUT, 20);
+    
+    c.perform()
+    print(c)
 
-    print(r.status_code, r.reason)
+    print(r.status_code, r.reason)'''
 ####################################-----VIEWS----##############################################################
 
 def home(request):
@@ -188,7 +231,9 @@ def indexer(request):
       caption_id = list_captions(youtube, video_id)
       subtitle = download_caption(youtube, caption_id, 'sbv')
       subtitle_parsed = parse_subtitle(str(subtitle))
+      keywords = get_keywords(subtitle_parsed)
       json_in = {'token':'True', 'subtitle':subtitle_parsed}
+      json_in.update({'keywords':keywords})
       return JsonResponse(json_in)
     except:
       return JsonResponse({'token':'False'})
