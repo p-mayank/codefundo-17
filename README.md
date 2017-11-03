@@ -1,6 +1,12 @@
 # codefundo
 Youthoob resources
 
+##SERVER APDRESS: 52.170.30.130
+### SERVER PASSWORDL: passwordCfd@17
+### USER: cfd
+### ssh cfd@52.170.30.130
+
+
 #FIRST TIME RUN
 ### create mysql database with name youthoob
 ### change accrodingly or change in settings.py
@@ -17,5 +23,7 @@ Youthoob resources
 ##INSTALL THESE PACKAGES
 ###  sudo -H pip3 install --upgrade google-api-python-client
 
-### SERVER PASSWORDL: passwordCfd@17
-### USER: cfd
+##Summary api
+# usern:roshandash
+# pass:12345
+#apikey : 7A401654BB
