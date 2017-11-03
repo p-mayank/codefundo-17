@@ -120,34 +120,45 @@ def parse_subtitle(subtitle):
   return out
 
 ####################################-----SUMMARY------#################################################
-summary_api_url = "http://api.smmry.com/"
+summary_api_url = "http://api.smmry.com/&SM_API_KEY=7A401654BB&SM_LENGTH=7&SM_WITH_BREAK"
 
 def summary(text):
     summary_key = "7A401654BB"
-    # json_in = {"SM_API_KEY": summary_key, "SM_LENGTH": 7, "sm_api_input": text}
-    # r = requests.post(summary_api_url, json=json_in)
-    # r_json = r.json()
-    # print(r_json["sm_api_content"])
-    # long_article = "Long article text goes here";
+    json_in = {"sm_api_input": text}
+    r = requests.post(summary_api_url, data=json_in)
+    r_json = r.json()
+    print(r_json['sm_api_content'])
+    # # long_article = "Long article text goes here";
+    # #
+    # # $ch = curl_init("http://api.smmry.com/&SM_API_KEY=XXXXXXXXX&SM_LENGTH=14&SM_WITH_BREAK");
+    # # curl_setopt($ch, CURLOPT_HTTPHEADER, array("Expect:")); // Important do not remove
+    # # curl_setopt($ch, CURLOPT_POST, true);
+    # # curl_setopt($ch, CURLOPT_POSTFIELDS, "sm_api_input=".$long_article);
+    # # curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    # # curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    # # curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
+    # # curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+    # # $return = json_decode(curl_exec($ch), true);
+    # # curl_close($ch);
     #
-    # $ch = curl_init("http://api.smmry.com/&SM_API_KEY=XXXXXXXXX&SM_LENGTH=14&SM_WITH_BREAK");
-    # curl_setopt($ch, CURLOPT_HTTPHEADER, array("Expect:")); // Important do not remove
-    # curl_setopt($ch, CURLOPT_POST, true);
-    # curl_setopt($ch, CURLOPT_POSTFIELDS, "sm_api_input=".$long_article);
-    # curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    # curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    # curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
-    # curl_setopt($ch, CURLOPT_TIMEOUT, 20);
-    # $return = json_decode(curl_exec($ch), true);
-    # curl_close($ch);
-
     # c = pycurl.Curl()
     # c.setopt(c.URL, summary_api_url)
     # c.setopt(c.HTTPHEADER, ["Expect:"])
     # c.setopt(c.POST, 1)
-    # c.setopt(c.POSTFIELDS, "sm_api_input="+text)
+    #
+    # post_data = {'sm_api_input':text}
+    # print("l")
+    # postfields = urlencode(post_data)
+    #
+    # c.setopt(c.POSTFIELDS, postfields)
+    # c.setopt(c.FOLLOWLOCATION, 1)
+    # c.setopt(c.RETURNTRANSFER, 1);
+    # c.setopt(c.CONNECTTIMEOUT, 20);
+    # c.setopt(c.TIMEOUT, 20);
+    #
     # c.perform()
     # print(c)
+
     print(r.status_code, r.reason)
 ####################################-----VIEWS----##############################################################
 
