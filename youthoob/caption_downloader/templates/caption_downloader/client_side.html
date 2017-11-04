@@ -191,6 +191,8 @@
         }
       });
   }
+  // var video_id;
+  // var video_id='IclfOKSLzDc';
 
   function grab_url(){
     url = $('#input_field').val();
@@ -204,11 +206,14 @@
         if(data['token']=='False'){
           console.log("fal");
           console.log(data["subtitle"]);
+          video_id = data["video_id"];
           // $('#sign-in-or-out-button').trigger('click');
         }else{
           console.log("tru");
           console.log(data["subtitle"]);
-          subtitle_promise = data["subtitle"]
+          subtitle_promise = data["subtitle"];
+          // video_id = data["video_id"];
+          playV(data["video_id"]);
           console.log(data);
         }
       }
@@ -246,7 +251,7 @@
         getToken();
         translated_text = data['translated'];
       }
-    }); 
+    });
   }
 
   const MS_URL = "https://api.microsofttranslator.com/V2/Http.svc";
@@ -266,7 +271,7 @@
                 token = result;
                 console.log(token);
                 voiceOver();
-            }  
+            }
         })
   }
 
@@ -281,7 +286,7 @@
         voice.play();
         // chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         //     chrome.tabs.sendMessage(tabs[0].id, {greeting: voice.currentTime.toString()}, null);
-            
+
         //   });
   }
 
@@ -352,7 +357,7 @@
   <a href="https://github.com/auduno/clmtrackr"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png" alt="Fork me on GitHub"></a>-->
   <p id="positions"></p>
   <div id="player"></div>
-  <script>
+  <script async defer>
     var vid = document.getElementById('videoel');
     var vid_width = vid.width;
     var vid_height = vid.height;
@@ -365,25 +370,27 @@
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     var player;
 
-    /////////////////////////
+    function playV(video_id) {
 
-    var video_id='HtJa9jJdzac';
+      /////////////////////////
+      window.onYouTubePlayerAPIReady = function() {
+          player = new YT.Player('player', {
+              height: '315',
+              width: '560',
+              videoId: video_id,
+              events: {
+                'onReady': onPlayerReady,
+                //'onStateChange': onPlayerStateChange
+                }
+          });
 
-    window.onYouTubePlayerAPIReady = function() {
-        player = new YT.Player('player', {
-            height: '315',
-            width: '560',
-            videoId: video_id,
-            events: {
-              'onReady': onPlayerReady,
-              //'onStateChange': onPlayerStateChange
-              }
-        });
+          //document.getElementById('pause').onclick = function() {
+          //player.pauseVideo();
+          //};
+      }
 
-        //document.getElementById('pause').onclick = function() {
-        //player.pauseVideo();
-        //};
     }
+
 
     $('#player').on('click', '.html5-video-player', function(){
               console.log('here!');
@@ -594,7 +601,7 @@
       stats.update();
     }, false);
 
-    $('#startbutton').trigger('click');
+
   </script>
 </div>
 
