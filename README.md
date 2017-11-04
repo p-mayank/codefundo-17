@@ -27,3 +27,10 @@ Youthoob resources
 # usern:roshandash
 # pass:12345
 #apikey : 7A401654BB
+
+### WATSON
+# "url": "https://gateway.watsonplatform.net/natural-language-understanding/api",
+# "username": "4f715217-9f93-4257-b977-c732bbfeecb3",
+# "password": "Fgy3OcTQqmxo"
+
+
