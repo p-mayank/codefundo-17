@@ -213,7 +213,13 @@
           console.log(data["subtitle"]);
           subtitle_promise = data["subtitle"];
           // video_id = data["video_id"];
-          playV(data["video_id"]);
+          // playV(data["video_id"]);
+          $('#div2').html('<h1>Summary</h1>'  + data["summary"]);
+          $('#div1').html('<h1>Keywords</h1>');
+
+          $.each(data["keywords"], function (i, val) {
+            $('#div1').append('<a href="'+val+'">'+i+'</a>&nbsp;&nbsp;&nbsp;');
+          });
           console.log(data);
         }
       }
@@ -243,7 +249,7 @@
       type:'POST',
       url:'{% url "translate" %}',
       data:{
-        'to_lang': to_lang,
+        'to_lang': 'fr',
         'string': subtitle_promise
       },
       success: function(data){
@@ -283,6 +289,7 @@
         voice.pause();
         $("#voice_source").attr("src", MS_URL + "/Speak?appid=Bearer "+ token + "&format=audio/mp3&options=male&language=" + 'en' + "&text=" + translated_text);
         voice.load();
+        player.mute();
         voice.play();
         // chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         //     chrome.tabs.sendMessage(tabs[0].id, {greeting: voice.currentTime.toString()}, null);
@@ -293,9 +300,7 @@
 
 </script>
 
-<video autoplay name="voice" id="voice">
-  <source id="voice_source" type="audio/mpeg" src=""/>
-</video>
+
 
 <button id="sign-in-or-out-button"
         style="margin-left: 25px">Sign In/Authorize</button>
@@ -315,7 +320,7 @@
 </select>
 <button type="button" onclick="translate_text();">Translate</button>
 
-<div id="auth-status" style="display: inline; padding-left: 25px"></div><hr>
+<div id="auth-status" style="display: none; padding-left: 25px"></div><hr>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script async defer src="https://apis.google.com/js/api.js"
@@ -357,6 +362,8 @@
   <a href="https://github.com/auduno/clmtrackr"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png" alt="Fork me on GitHub"></a>-->
   <p id="positions"></p>
   <div id="player"></div>
+  <div id="div1"></div>
+  <div id="div2"></div>
   <script async defer>
     var vid = document.getElementById('videoel');
     var vid_width = vid.width;
@@ -370,9 +377,10 @@
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     var player;
 
-    function playV(video_id) {
+    // function playV(video_id) {
 
       /////////////////////////
+      var video_id = 'HtJa9jJdzac'
       window.onYouTubePlayerAPIReady = function() {
           player = new YT.Player('player', {
               height: '315',
@@ -389,7 +397,7 @@
           //};
       }
 
-    }
+    // }
 
 
     $('#player').on('click', '.html5-video-player', function(){
@@ -601,8 +609,12 @@
       stats.update();
     }, false);
 
-
+    $('#startbutton').trigger('click');
   </script>
 </div>
+
+<video autoplay name="voice" id="voice">
+  <source id="voice_source" type="audio/mpeg" src=""/>
+</video>
 
 {% endblock %}
