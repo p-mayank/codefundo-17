@@ -9,8 +9,8 @@ Youthoob is a youtube-based web-application which uses Natural language processi
 ## SERVER APDRESS: 52.170.30.130 (Azure-SSD)
 
 # Deployment Instructions
-## Create Mysql Database with Name 'youthoob'
-## Change Accrodingly or Change in 'settings.py'
+* Create Mysql Database with Name 'youthoob'
+* Change Accrodingly or Change in 'settings.py'
 ```
   'NAME': 'youthoob',
   'USER': 'root',
