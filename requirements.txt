@@ -1,0 +1,6 @@
+requests
+logging
+httplib2
+pycurl
+--upgrade google-api-python-client
+--upgrade watson-developer-cloud
