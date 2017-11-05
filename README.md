@@ -1,14 +1,14 @@
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
-##CodeFunDo Campus Hackathon '17
+## CodeFunDo Campus Hackathon '17
 * Application Resources
 
 ## About
 Youthoob is a youtube-based web-application which uses Natural language processing and machine learning intelligence to extract summary out of a youtube video, which can be really helpful in identifying click-baits. It also uses microsoft azure services to translate the youtube video into different languages, and is smart enough to pause the video when the user is out of sight.
 
-#SERVER APDRESS: 52.170.30.130 (Azure-SSD)
+# SERVER APDRESS: 52.170.30.130 (Azure-SSD)
 
-##Deployment Instructions
+## Deployment Instructions
 # Create Mysql Database with Name 'youthoob'
 # Change Accrodingly or Change in 'settings.py'
 ```
@@ -19,12 +19,12 @@ Youthoob is a youtube-based web-application which uses Natural language processi
   'PORT': '3306',
 ```
 
-##INSTALL DEPENDENCIES
+## INSTALLATION DEPENDENCIES
 ```
 sudo pip install -r requirements.txt
 ```
 
-##Django Instructions
+## Django Instructions
 ```
 python3 manage.py makemigrations caption_downloader
 python3 manage.py migrate
