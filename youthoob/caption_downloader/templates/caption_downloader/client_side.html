@@ -213,8 +213,10 @@
           console.log(data["subtitle"]);
           subtitle_promise = data["subtitle"];
           // video_id = data["video_id"];
-          // playV(data["video_id"]);
-          $('#div2').html('<h1>Summary</h1>'  + data["summary"]);
+          playV(data["video_id"]);
+          var summry = data["summary"];
+          var rest = summry.split('[BREAK]').join('<br/>');
+          $('#div2').html('<h1>Summary</h1>'  + rest);
           $('#div1').html('<h1>Keywords</h1>');
 
           $.each(data["keywords"], function (i, val) {
@@ -371,16 +373,17 @@
     var overlay = document.getElementById('overlay');
     var overlayCC = overlay.getContext('2d');
     /********** check and set up video/webcam **********/
-    var tag = document.createElement('script');
-    tag.src = "http://www.youtube.com/player_api";
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    
     var player;
 
-    // function playV(video_id) {
-
+    function playV(video_id) {
+      // console.log('here!');
+      var tag = document.createElement('script');
+      tag.src = "http://www.youtube.com/player_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
       /////////////////////////
-      var video_id = 'HtJa9jJdzac'
+      // var video_id = 'HtJa9jJdzac'
       window.onYouTubePlayerAPIReady = function() {
           player = new YT.Player('player', {
               height: '315',
@@ -397,7 +400,7 @@
           //};
       }
 
-    // }
+    }
 
 
     $('#player').on('click', '.html5-video-player', function(){
@@ -407,6 +410,8 @@
 
     function onPlayerReady(event) {
           event.target.playVideo();
+          $('#startbutton').trigger('click');
+          
 
             $('#player').on('click', function(){
               console.log('here!');
@@ -609,7 +614,6 @@
       stats.update();
     }, false);
 
-    $('#startbutton').trigger('click');
   </script>
 </div>
 
